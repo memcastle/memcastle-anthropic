@@ -1,0 +1,33 @@
+format = 1
+memcastle = ">=0.4, <0.6"
+
+[plugin]
+id = "anthropic"
+version = "0.1.0"
+provider = "anthropic"
+description = "Claude Code history and lifecycle integration"
+repository = "https://github.com/memcastle/memcastle-anthropic"
+license = "MIT"
+
+
+
+[[modules]]
+id = "claude"
+type = "source"
+version = "0.1.0"
+manifest = "modules/claude/memcastle-source.toml"
+manifest_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+entry = "modules/claude/source.wasm"
+sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+contract = "0.4.0"
+
+
+[[modules]]
+id = "claude-code"
+type = "integration"
+version = "0.1.0"
+manifest = "modules/claude-code/memcastle-integration.toml"
+manifest_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+entry = "modules/claude-code/dist/index.js"
+sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+
