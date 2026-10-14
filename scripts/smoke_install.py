@@ -62,7 +62,8 @@ def main() -> None:
         # Reproduce a Core-shipped integration whose receipt already names `claude-code`.
         manifest_text = (ROOT / "modules/claude-code/memcastle-integration.toml").read_text()
         (legacy_dir / "memcastle-integration.toml").write_text(manifest_text.replace("local = true\n", ""))
-        shutil.copytree(ROOT / "modules/claude-code/dist", legacy_dir / "dist")
+        # Actions artifacts omit hidden dist entries by default; the authored files always carry the old marketplace.
+        shutil.copytree(ROOT / "modules/claude-code/plugin", legacy_dir / "dist")
         old_hook = legacy_dir / "dist/hooks/hooks.json"
         old_hook.write_text(old_hook.read_text() + "\n")
         shutil.copytree(ROOT / "modules/claude-code/skills", assets / "skills")
