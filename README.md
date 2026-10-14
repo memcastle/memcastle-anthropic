@@ -1,5 +1,8 @@
 # MemCastle Anthropic plugin
 
+Coverage CI measures the native Rust source tests and Claude Code Bun integration tests, then uploads LCOV
+to Codecov with GitHub OIDC. Enable this repository in Codecov for PR coverage status.
+
 Claude Code history and lifecycle integration.
 
 This independently released plugin contains the existing `claude` Claude Code transcript source and the `claude-code`

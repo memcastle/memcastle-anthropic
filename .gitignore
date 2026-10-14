@@ -5,5 +5,6 @@ modules/claude-code/dist/
 modules/claude/dist/
 modules/*/node_modules/
 modules/*/target/
+modules/*/coverage/
 modules/*/source.wasm
 __pycache__/
