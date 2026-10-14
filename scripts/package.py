@@ -95,7 +95,8 @@ def main() -> None:
                 f"--remap-path-prefix={module_dir}=/module",
             ))
             subprocess.run(["cargo", "build", "--locked", "--release", "--target", "wasm32-wasip2"], cwd=module_dir, env=build_env, check=True)
-            built = module_dir / "target/wasm32-wasip2/release" / f"{name.replace('-', '_')}.wasm"
+            # Retain the source crate's original artifact name to avoid changing its build contract.
+            built = module_dir / "target/wasm32-wasip2/release" / "memcastle_source_claude.wasm"
             if not built.is_file():
                 raise ValueError(f"source {name!r} built no component at {built}")
             shutil.copyfile(built, safe_parent(module["entry"]))
@@ -108,7 +109,8 @@ def main() -> None:
             # A module may carry generated JavaScript or an independently built agent bundle.
             # Always run its declared build before hashing the entry and copying assets.
             if (module_dir / "package.json").is_file():
-                subprocess.run(["npm", "run", "build"], cwd=module_dir, check=True)
+                # Claude's runtime is declarative JSON/Markdown, so packaging needs no JS toolchain.
+                subprocess.run(["python3", "scripts/build.py"], cwd=module_dir, check=True)
             with safe_file(module["manifest"]).open("rb") as source:
                 integration = tomllib.load(source)
             prefix = f"modules/{name}"

@@ -13,9 +13,9 @@ ROOT = Path(__file__).resolve().parents[1]
 class PluginManifestTests(unittest.TestCase):
     def test_module_ids_are_unique_and_stable(self):
         plugin = tomllib.loads((ROOT / "plugin.toml").read_text())
-        names = [module["id"] for module in plugin.get("modules", [])]
-        self.assertEqual(len(names), len(set(names)))
-        self.assertTrue(plugin["plugin"]["id"])
+        modules = [(module["id"], module["type"]) for module in plugin.get("modules", [])]
+        self.assertEqual(modules, [("claude", "source"), ("claude-code", "integration")])
+        self.assertEqual(plugin["plugin"]["id"], "anthropic")
 
     def test_declared_module_manifests_exist(self):
         plugin = tomllib.loads((ROOT / "plugin.toml").read_text())
@@ -29,6 +29,21 @@ class PluginManifestTests(unittest.TestCase):
             self.assertEqual(child["compatibility"]["memcastle"], plugin["memcastle"])
             if module["type"] == "source":
                 self.assertEqual(child["compatibility"]["contract"], module["contract"])
+
+    def test_claude_marketplace_identity_and_skills_survive_external_packaging(self):
+        plugin = tomllib.loads((ROOT / "plugin.toml").read_text())
+        source, integration = plugin["modules"]
+        self.assertEqual(source["id"], "claude")
+        self.assertEqual(integration["entry"], "modules/claude-code/dist/.claude-plugin/marketplace.json")
+        manifest = tomllib.loads((ROOT / integration["manifest"]).read_text())
+        self.assertEqual(manifest["agent"]["kind"], "claude-code")
+        self.assertEqual(manifest["agent"]["entry"], ".claude-plugin/marketplace.json")
+        self.assertEqual({skill["name"] for skill in manifest["skills"]}, {
+            "memcastle-setup", "search-before-answer", "checkpoint-instructions", "wake-up", "diary",
+        })
+        for skill in manifest["skills"]:
+            self.assertTrue(skill["local"])
+            self.assertTrue((ROOT / "modules/claude-code/skills" / skill["name"] / "SKILL.md").is_file())
 
     def test_packaging_never_follows_a_source_component_symlink(self):
         spec = spec_from_file_location("provider_package", ROOT / "scripts/package.py")
