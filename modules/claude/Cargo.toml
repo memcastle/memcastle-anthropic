@@ -1,5 +1,5 @@
 [package]
-name = "claude"
+name = "memcastle-source-claude"
 version = "0.1.0"
 edition = "2024"
 publish = false
@@ -16,5 +16,4 @@ opt-level = "s"
 lto = true
 strip = true
 
-# Independent workspace: this module builds inside a provider monorepo or alone.
 [workspace]

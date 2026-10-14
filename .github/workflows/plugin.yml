@@ -71,3 +71,4 @@ jobs:
       archive-path: ${{ needs.package.outputs.archive }}
       # Add exact plugin-capable stable versions once available; main is always tested.
       core-versions: '[]'
+      extra-smoke-command: python3 scripts/smoke_adoption.py

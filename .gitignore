@@ -1,6 +1,9 @@
 dist/
 !modules/*/dist/
 !modules/*/dist/**
+modules/claude-code/dist/
+modules/claude/dist/
+modules/*/node_modules/
 modules/*/target/
 modules/*/source.wasm
 __pycache__/

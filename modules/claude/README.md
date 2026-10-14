@@ -1,10 +1,26 @@
-# claude
+# Claude Code history source
 
-Text files from a selected directory.
+This WebAssembly source reads Claude Code's documented JSONL session transcripts from
+`~/.claude/projects/<project>/<session>.jsonl`.
+It is separate from any live Claude Code integration: it reads finished or active local transcript files directly and never
+starts Claude Code, contacts a service, or reads Claude settings or credentials.
 
-This is a separately activatable MemCastle source module using the `memcastle:source@0.4.0` WIT world.
-Build with `cargo build --release --target wasm32-wasip2` after installing the target.
-Run `cargo fmt --all -- --check` and `cargo clippy --locked --target wasm32-wasip2 -- -D warnings` locally.
-Commit `Cargo.lock` after the initial `cargo generate-lockfile` so CI and releases build the same dependency graph.
-Run `memcastle source test .` to check the incremental text-file fixture against the real host.
-Package this module with its containing provider plugin; installing that plugin does not enable this source.
+## Use it
+
+```sh
+memcastle plugin install anthropic
+memcastle source enable claude
+memcastle mine claude
+memcastle mine claude /backups/claude/projects since=2026-09 dir=/work/app
+```
+
+It requests read-only access to the supplied locator and `~/.claude/projects`, plus `HOME` only to locate that default.
+It has no process, network, write, or credential permission.
+
+Each transcript is one `transcript` document tagged `claude` and `transcript`.
+The source retains user and assistant text plus compact `[tool: name]` markers, and deliberately drops thinking, tool results,
+system and compaction records, attachments, patches, malformed lines, and unknown records.
+The source never follows symlinks and only considers `.jsonl` files exactly one directory below the projects root.
+
+The `watch` capability is declarative only.
+Define and enable a miner and trigger yourself; installing this package does not start background mining.
