@@ -7,3 +7,4 @@ modules/*/node_modules/
 modules/*/target/
 modules/*/source.wasm
 __pycache__/
+ship.release.json

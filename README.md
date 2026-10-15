@@ -1,5 +1,11 @@
 # MemCastle Anthropic plugin
 
+Release delivery uses gh-ship: releasable Conventional Commits open a `release/next` PR on pushes to `main`.
+Review and merge that PR to publish a validated `anthropic/vVERSION` archive. Configure the `release` environment
+with `APP_CLIENT_ID` (variable) and `APP_PRIVATE_KEY` (secret) for a GitHub App installed on this repository with
+contents, actions and pull requests write permissions (issues write for creating labels). Set squash title to PR title
+and squash message to blank. `prepare-release` accepts `dry_run` without pushing.
+
 Claude Code history and lifecycle integration.
 
 This independently released plugin contains the existing `claude` Claude Code transcript source and the `claude-code`
@@ -32,8 +38,8 @@ It runs on every pull request and every push to `main`, including merges, withou
 Every version exercises source fixtures and archive installation/activation; incompatible versions fail the workflow.
 The development release body records the exact Core source SHA, and the workflow summary reports it for each run.
 Core CI separately tests a freshly composed project against its current install contract.
-The provider's own release workflow accepts only a `anthropic/v<plugin.toml version>` tag on `main`, then builds
-the reviewed artifact, runs manifest and compatibility-matrix tests, and refuses an existing release.
+The publish workflow accepts only an `anthropic/v<plugin.toml version>` tag on `main`, then builds
+the reviewed artifact and runs manifest and compatibility-matrix tests before uploading to a draft release.
 ## Install and migrate
 
 Start the MemCastle daemon, then run `memcastle plugin search anthropic` and `memcastle plugin install anthropic`.
@@ -52,6 +58,6 @@ Develop the modules under `modules/claude/` and `modules/claude-code/` and run t
 The recorded GitTPL parent and child revisions live in `.config/git.tpl.toml`; template updates must be reviewed and
 merged explicitly. CI checks both module projects and tests the packaged artifact against Core's plugin-capable `main`
 release, including legacy source adoption. Do not list Core 0.4.1 as compatible: it predates plugin installation.
-To publish, review the committed artifact digests and CI result, then tag a reviewed `main` commit
-`anthropic/v<plugin.toml version>`; the standalone release workflow publishes the validated archive.
+To publish, review the committed artifact digests and CI result, then merge the gh-ship Release PR.
+gh-ship tags the reviewed `main` commit and the standalone publish workflow uploads the validated archive.
 Core's `plugins.json` catalogue discovers that release by repository and checks its release-asset digest.
