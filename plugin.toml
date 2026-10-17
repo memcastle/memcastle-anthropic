@@ -13,14 +13,14 @@ license = "MIT"
 [[modules]]
 id = "claude"
 type = "source"
-manifest = "modules/claude/memcastle-source.toml"
-entry = "modules/claude/source.wasm"
+manifest = "sources/claude/memcastle-source.toml"
+entry = "sources/claude/source.wasm"
 contract = "0.4.0"
 
 
 [[modules]]
 id = "claude-code"
 type = "integration"
-manifest = "modules/claude-code/memcastle-integration.toml"
-entry = "modules/claude-code/dist/index.js"
+manifest = "integrations/claude-code/memcastle-integration.toml"
+entry = "integrations/claude-code/dist/index.js"
 

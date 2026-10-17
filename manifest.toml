@@ -14,8 +14,8 @@ license = "MIT"
 id = "claude"
 type = "source"
 version = "0.1.0"
-manifest = "modules/claude/memcastle-source.toml"
-entry = "modules/claude/source.wasm"
+manifest = "sources/claude/memcastle-source.toml"
+entry = "sources/claude/source.wasm"
 contract = "0.4.0"
 
 
@@ -23,7 +23,7 @@ contract = "0.4.0"
 id = "claude-code"
 type = "integration"
 version = "0.1.0"
-manifest = "modules/claude-code/memcastle-integration.toml"
-entry = "modules/claude-code/dist/index.js"
+manifest = "integrations/claude-code/memcastle-integration.toml"
+entry = "integrations/claude-code/dist/index.js"
 
 [checksums]
