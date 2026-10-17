@@ -6,6 +6,7 @@ modules/claude/dist/
 modules/*/node_modules/
 modules/*/target/
 modules/*/coverage/
+modules/*/junit.xml
 modules/*/source.wasm
 ship.release.json
 __pycache__/
