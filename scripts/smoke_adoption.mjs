@@ -4,17 +4,17 @@ import { copyFileSync, mkdirSync, readFileSync, rmSync, utimesSync } from "node:
 import { join } from "node:path"
 import { ROOT, cli, isolated, mine } from "./smoke_common.mjs"
 
-cli(["source", "package", join(ROOT, "modules/claude"), "--no-build"], process.env)
+cli(["source", "package", join(ROOT, "sources/claude"), "--no-build"], process.env)
 const plugin = readFileSync(join(ROOT, "dist/anthropic-0.1.0.tar.gz"))
-const legacy = readFileSync(join(ROOT, "modules/claude/dist/claude-0.1.0.tar.gz"))
+const legacy = readFileSync(join(ROOT, "sources/claude/dist/claude-0.1.0.tar.gz"))
 
 for (const bundled of [false, true]) {
   await isolated(`memcastle-claude-${bundled ? "bundled" : "installed"}-adopt-`, ({ assets }) => {
     if (!bundled) return
     const source = join(assets, "sources/claude")
     mkdirSync(source, { recursive: true })
-    copyFileSync(join(ROOT, "modules/claude/memcastle-source.toml"), join(source, "memcastle-source.toml"))
-    copyFileSync(join(ROOT, "modules/claude/dist/source.wasm"), join(source, "source.wasm"))
+    copyFileSync(join(ROOT, "sources/claude/memcastle-source.toml"), join(source, "memcastle-source.toml"))
+    copyFileSync(join(ROOT, "sources/claude/dist/source.wasm"), join(source, "source.wasm"))
   }, async ({ root, assets, request }) => {
     if (bundled) {
       await request("/api/source-packages/claude/enable", { method: "POST" })
@@ -31,7 +31,7 @@ for (const bundled of [false, true]) {
     const sessions = join(root, "sessions")
     const session = join(sessions, "-work-app/session-a.jsonl")
     mkdirSync(join(sessions, "-work-app"), { recursive: true })
-    copyFileSync(join(ROOT, "modules/claude/fixtures/claude-projects/tree/-work-app/session-a.jsonl"), session)
+    copyFileSync(join(ROOT, "sources/claude/fixtures/claude-projects/tree/-work-app/session-a.jsonl"), session)
     utimesSync(session, 1000, 1000)
     await request("/api/miners/claude", { method: "PUT", json: { source: "claude", locator: sessions } })
     const run = async () => {
