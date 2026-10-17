@@ -9,16 +9,17 @@ This provider plugin owns the versioned package, while each module has its own l
 Installing the plugin makes its modules available; enable sources and install integrations separately.
 
 ```sh
-python3 scripts/package.py                         # requires Rust and wasm32-wasip2
-python3 scripts/check_modules.py
-python3 -m unittest discover -s tests
+memcastle plugin inspect plugin.toml --json
+# Build modules/claude for wasm32-wasip2 and run bun run build in modules/claude-code first.
+memcastle plugin package plugin.toml
+memcastle plugin test dist/anthropic-0.1.0.tar.gz
 MEMCASTLE_BIN=/path/to/memcastle python3 scripts/smoke_install.py
 MEMCASTLE_BIN=/path/to/memcastle python3 scripts/smoke_adoption.py
 ```
 
 The archive in `dist/` is independently releasable from MemCastle Core.
-The root `plugin.toml` declares stable module identities; the package script fills artifact hashes after building.
-Commit each source module's `Cargo.lock` and regenerated `plugin.toml` hashes before publishing a release.
+The root `plugin.toml` is an immutable module descriptor; Core regenerates the reviewable `manifest.toml` with
+release versions and artifact checksums. Commit each source module's `Cargo.lock` and regenerated `manifest.toml`.
 The source module carries the versioned public WIT contract and its own fixtures; the agent integration uses MCP/HTTP.
 No module needs a private Core checkout or a sibling provider to build or test.
 The smoke check starts an isolated daemon, upgrades an existing Core-shipped Claude Code installation receipt, and
@@ -32,8 +33,8 @@ It runs on every pull request and every push to `main`, including merges, withou
 Every version exercises source fixtures and archive installation/activation; incompatible versions fail the workflow.
 The development release body records the exact Core source SHA, and the workflow summary reports it for each run.
 Core CI separately tests a freshly composed project against its current install contract.
-The provider's own release workflow accepts only a `anthropic/v<plugin.toml version>` tag on `main`, then builds
-the reviewed artifact, runs manifest and compatibility-matrix tests, and refuses an existing release.
+The release workflow validates the reviewed `anthropic/v<manifest.toml version>` tag on `main`, then builds and
+checks the archive against Core's compatibility matrix before attaching it to gh-ship's draft release.
 ## Install and migrate
 
 Start the MemCastle daemon, then run `memcastle plugin search anthropic` and `memcastle plugin install anthropic`.
@@ -52,6 +53,7 @@ Develop the modules under `modules/claude/` and `modules/claude-code/` and run t
 The recorded GitTPL parent and child revisions live in `.config/git.tpl.toml`; template updates must be reviewed and
 merged explicitly. CI checks both module projects and tests the packaged artifact against Core's plugin-capable `main`
 release, including legacy source adoption. Do not list Core 0.4.1 as compatible: it predates plugin installation.
-To publish, review the committed artifact digests and CI result, then tag a reviewed `main` commit
-`anthropic/v<plugin.toml version>`; the standalone release workflow publishes the validated archive.
+Merging a releasable Conventional Commit into `main` opens a reviewed `release/next` PR via git-cliff and gh-ship.
+After that PR merges, the release workflow publishes the validated archive and `.sha256sum`.
+Configure the `release` environment with `APP_CLIENT_ID` and `APP_PRIVATE_KEY` for an installed GitHub App.
 Core's `plugins.json` catalogue discovers that release by repository and checks its release-asset digest.
