@@ -7,10 +7,12 @@ Claude Code agent integration. It does not currently include a Claude.ai convers
 The stable module IDs preserve miner configuration, mined source identity and existing Claude Code installation receipts.
 This provider plugin owns the versioned package, while each module has its own lifecycle.
 Installing the plugin makes its modules available; enable sources and install integrations separately.
+Sources live in `sources/<id>/` and integrations in `integrations/<id>/`; typed modules may share an ID without
+sharing their implementation files or activation state.
 
 ```sh
 memcastle plugin inspect plugin.toml --json
-# Build modules/claude for wasm32-wasip2 and run bun run build in modules/claude-code first.
+# Build sources/claude for wasm32-wasip2 and run bun run build in integrations/claude-code first.
 memcastle plugin package plugin.toml
 memcastle plugin test dist/anthropic-0.1.0.tar.gz
 MEMCASTLE_BIN=/path/to/memcastle node scripts/smoke_adoption.mjs
@@ -48,7 +50,7 @@ plugin has been installed; the local marketplace name `memcastle-local` and plug
 
 ## Contribute and release
 
-Develop the modules under `modules/claude/` and `modules/claude-code/` and run the commands above before review.
+Develop the modules under `sources/claude/` and `integrations/claude-code/` and run the commands above before review.
 The recorded GitTPL parent and child revisions live in `.config/git.tpl.toml`; template updates must be reviewed and
 merged explicitly. CI checks both module projects and tests the packaged artifact against Core's plugin-capable `main`
 release, including legacy source adoption. Do not list Core 0.4.1 as compatible: it predates plugin installation.
