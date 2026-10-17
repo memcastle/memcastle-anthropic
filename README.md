@@ -11,30 +11,29 @@ Sources live in `sources/<id>/` and integrations in `integrations/<id>/`; typed 
 sharing their implementation files or activation state.
 
 ```sh
-memcastle plugin inspect plugin.toml --json
+memcastle plugin inspect --json
 # Build sources/claude for wasm32-wasip2 and run bun run build in integrations/claude-code first.
-memcastle plugin package plugin.toml
-memcastle plugin test dist/anthropic-0.1.0.tar.gz
-MEMCASTLE_BIN=/path/to/memcastle node scripts/smoke_adoption.mjs
+memcastle plugin package
+memcastle plugin test dist/anthropic-VERSION.tar.gz
+node scripts/smoke_adoption.mjs
 ```
 
 The archive in `dist/` is independently releasable from MemCastle Core.
-The root `plugin.toml` is an immutable module descriptor; Core regenerates the reviewable `manifest.toml` with
-release versions and artifact checksums. Commit each source module's `Cargo.lock` and regenerated `manifest.toml`.
+The root `plugin.toml` is immutable; Core generates `manifest.toml` inside the archive with the SCM-derived version
+and artifact checksums. Commit each source module's `Cargo.lock` before releasing.
 The source module carries the versioned public WIT contract and its own fixtures; the agent integration uses MCP/HTTP.
 No module needs a private Core checkout or a sibling provider to build or test.
 The smoke check starts an isolated daemon, upgrades an existing Core-shipped Claude Code installation receipt, and
 verifies registry discovery, source mining and the agent integration in a temporary home.
 The adoption check separately proves installed and formerly bundled `claude` miners retain their cursors and documents.
-Provider CI builds and packages locally, then calls Core's shared artifact-validation workflow for a `[main, versions...]`
-matrix, with additional exact plugin-capable
-stable versions configured in `core-versions` and the `main` prerelease always included.
+Provider CI builds and packages locally, then calls Core's shared artifact-validation workflow for the static
+`core_versions` selection (currently `main`); add plugin-capable stable release trees when available.
 The reusable validation workflow follows Core's `main` branch without a revision pin.
 It runs on every pull request and every push to `main`, including merges, without a second push run on PR branches.
 Every version exercises source fixtures and archive installation/activation; incompatible versions fail the workflow.
 The development release body records the exact Core source SHA, and the workflow summary reports it for each run.
 Core CI separately tests a freshly composed project against its current install contract.
-The release workflow validates the reviewed `anthropic/v<manifest.toml version>` tag on `main`, then builds and
+The release workflow validates the reviewed `anthropic/vVERSION` tag on `main`, then builds and
 checks the archive against Core's compatibility matrix before attaching it to gh-ship's draft release.
 ## Install and migrate
 

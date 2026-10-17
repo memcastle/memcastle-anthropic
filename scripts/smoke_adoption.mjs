@@ -2,10 +2,10 @@
 import assert from "node:assert/strict"
 import { copyFileSync, mkdirSync, readFileSync, rmSync, utimesSync } from "node:fs"
 import { join } from "node:path"
-import { ROOT, cli, isolated, mine } from "./smoke_common.mjs"
+import { ROOT, cli, isolated, mine, pluginArchive } from "./smoke_common.mjs"
 
 cli(["source", "package", join(ROOT, "sources/claude"), "--no-build"], process.env)
-const plugin = readFileSync(join(ROOT, "dist/anthropic-0.1.0.tar.gz"))
+const plugin = readFileSync(pluginArchive())
 const legacy = readFileSync(join(ROOT, "sources/claude/dist/claude-0.1.0.tar.gz"))
 
 for (const bundled of [false, true]) {
