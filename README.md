@@ -1,5 +1,7 @@
 # MemCastle Anthropic plugin
 
+[![CI](https://github.com/memcastle/memcastle-anthropic/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/memcastle/memcastle-anthropic/actions/workflows/ci.yaml) [![Codecov](https://codecov.io/gh/memcastle/memcastle-anthropic/graph/badge.svg)](https://codecov.io/gh/memcastle/memcastle-anthropic)
+
 Claude Code history and lifecycle integration.
 
 This independently released plugin contains the existing `claude` Claude Code transcript source and the `claude-code`
