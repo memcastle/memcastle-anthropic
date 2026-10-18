@@ -2,9 +2,54 @@ coverage:
   status:
     project:
       default:
-        target: auto
+        target: "20%"
+        threshold: 0%
     patch:
       default:
-        target: auto
+        target: "19%"
+        threshold: 0%
+
+# Each flag names the same typed module as the matching CI upload.
+# A missing report is not carried forward from an earlier commit.
+flags:
+
+  source-claude:
+    paths: ["sources/claude/src/**"]
+    carryforward: false
+
+
+  integration-claude-code:
+    paths: ["integrations/claude-code/src/**"]
+    carryforward: false
+
+
+# Components describe actual file ownership, independently of upload flags.
+# Modules without native coverage stay visible without becoming failing gates.
+component_management:
+  individual_components:
+
+    - component_id: source-claude
+      name: Source claude
+      paths: ["sources/claude/src/**"]
+      statuses:
+        - type: project
+
+          target: "20%"
+          threshold: 0%
+
+
+
+    - component_id: integration-claude-code
+      name: Integration claude-code
+      paths: ["integrations/claude-code/src/**"]
+      statuses:
+        - type: project
+
+          target: 0%
+          informational: true
+
+
+
 comment:
-  layout: reach,diff,flags,files
+  layout: reach,diff,flags,components,files
+  require_changes: false
