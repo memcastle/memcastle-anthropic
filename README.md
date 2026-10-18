@@ -57,3 +57,6 @@ Merging a releasable Conventional Commit into `main` opens a reviewed `release/n
 After that PR merges, the release workflow publishes the validated archive and `.sha256sum`.
 Configure the `release` environment with `APP_CLIENT_ID` and `APP_PRIVATE_KEY` for an installed GitHub App.
 Core's `plugins.json` catalogue discovers that release by repository and checks its release-asset digest.
+
+Codecov uses fixed 20% project, 19% patch and 20% `source-claude` component floors.
+The `integration-claude-code` component is informational until its tests upload nonempty LCOV.

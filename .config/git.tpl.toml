@@ -8,6 +8,12 @@ source = "https://github.com/memcastle/memcastle-plugin.tpl"
 
 [answers]
 codecov = true
+codecov_covered_integrations = []
+codecov_covered_sources = ["claude"]
+codecov_integration_target = "80%"
+codecov_patch_target = "19%"
+codecov_project_target = "20%"
+codecov_source_target = "20%"
 core_versions = ["main"]
 description = "Claude Code history and lifecycle integration"
 gh_ship = true
