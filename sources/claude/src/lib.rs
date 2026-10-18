@@ -191,28 +191,7 @@ fn parse_since(value: &str) -> Result<i64, String> {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::parse_since;
-
-    #[test]
-    fn a_timestamp_cutoff_honors_the_clock_and_offset() {
-        let cutoff = parse_since("2026-09-14T18:00:00.250+02:00").unwrap();
-        assert_eq!(cutoff, parse_since("2026-09-14T16:00:00.250Z").unwrap());
-        assert!(cutoff > parse_since("2026-09-14").unwrap());
-        assert!(cutoff < parse_since("2026-09-15").unwrap());
-        assert_eq!(
-            parse_since("2026-09").unwrap(),
-            parse_since("2026-09-01").unwrap()
-        );
-        for invalid in [
-            "2026-09-14T25:00:00Z",
-            "2026-09-14T18:00:00",
-            "2026-09-14T18:00:00+02:99",
-        ] {
-            assert!(parse_since(invalid).is_err(), "{invalid} should be refused");
-        }
-    }
-}
+mod tests;
 
 fn normalize_dir(value: &str) -> String {
     let absolute = value.starts_with('/');
@@ -335,7 +314,10 @@ fn has_retained_message(body: &str) -> bool {
             }
             let message = record.get("message").unwrap_or(&record);
             matches!(
-                message.get("role").and_then(Value::as_str),
+                message
+                    .get("role")
+                    .or_else(|| record.get("type"))
+                    .and_then(Value::as_str),
                 Some("user" | "assistant")
             ) && content_text(message.get("content").unwrap_or(&Value::Null)).is_some()
         })
