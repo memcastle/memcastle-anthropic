@@ -29,7 +29,8 @@ The smoke check starts an isolated daemon, upgrades an existing Core-shipped Cla
 verifies registry discovery, source mining and the agent integration in a temporary home.
 The adoption check separately proves installed and formerly bundled `claude` miners retain their cursors and documents.
 Provider CI builds and packages locally, then calls Core's shared artifact-validation workflow for the static
-`core_versions` selection (currently `main`); add plugin-capable stable release trees when available.
+`core_versions` selection (currently `development`); add plugin-capable stable release trees when available.
+The Core setup action verifies the fixed development binary against `SHA256SUMS` before testing the plugin.
 The reusable validation workflow follows Core's `main` branch without a revision pin.
 It runs on every pull request and every push to `main`, including merges, without a second push run on PR branches.
 Every version exercises source fixtures and archive installation/activation; incompatible versions fail the workflow.
@@ -53,7 +54,7 @@ plugin has been installed; the local marketplace name `memcastle-local` and plug
 
 Develop the modules under `sources/claude/` and `integrations/claude-code/` and run the commands above before review.
 The recorded GitTPL parent and child revisions live in `.config/git.tpl.toml`; template updates must be reviewed and
-merged explicitly. CI checks both module projects and tests the packaged artifact against Core's plugin-capable `main`
+merged explicitly. CI checks both module projects and tests the packaged artifact against Core's plugin-capable `development`
 release, including legacy source adoption. Do not list Core 0.4.1 as compatible: it predates plugin installation.
 Merging a releasable Conventional Commit into `main` opens a reviewed `release/next` PR via git-cliff and gh-ship.
 After that PR merges, the release workflow publishes the validated archive and `.sha256sum`.
