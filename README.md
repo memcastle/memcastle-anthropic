@@ -30,6 +30,7 @@ verifies registry discovery, source mining and the agent integration in a tempor
 The adoption check separately proves installed and formerly bundled `claude` miners retain their cursors and documents.
 Provider CI builds and packages locally, then calls Core's shared artifact-validation workflow for the static
 `core_versions` selection (currently `development`); add plugin-capable stable release trees when available.
+The Core setup action verifies the fixed development binary against `SHA256SUMS` before testing the plugin.
 The reusable validation workflow follows Core's `main` branch without a revision pin.
 It runs on every pull request and every push to `main`, including merges, without a second push run on PR branches.
 Every version exercises source fixtures and archive installation/activation; incompatible versions fail the workflow.
