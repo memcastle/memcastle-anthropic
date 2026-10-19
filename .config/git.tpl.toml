@@ -23,6 +23,7 @@ integrations = ["claude-code"]
 memcastle = ">=0.4, <0.6"
 plugin_id = "anthropic"
 provider = "anthropic"
+registry = true
 repository_name = "memcastle-anthropic"
 ship_token = "app"
 source_template = "https://github.com/memcastle/memcastle-source.tpl"
