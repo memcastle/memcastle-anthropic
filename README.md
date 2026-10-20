@@ -59,7 +59,7 @@ cursors and documents. Neither module needs a sibling Core checkout to build or 
 
 ## CI and releases
 
-CI builds both modules and tests the packaged artifact against Core `development`. The Core setup action verifies
+CI builds both modules and tests the packaged artifact against Core `development` and `0.5`. The Core setup action verifies
 the binary against `SHA256SUMS`; Core's shared validation tests source fixtures, installation and activation on
 pull requests and pushes to `main`. Core 0.4.1 predates plugin installation and is not a compatible matrix entry.
 
