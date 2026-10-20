@@ -7,7 +7,7 @@ version = "0.1.0"
 description = "Native MCP and shared skills for Claude Code, installed through a local plugin marketplace"
 
 [compatibility]
-memcastle = ">=0.4, <0.6"
+memcastle = ">=0.5, <0.6"
 # Plugin marketplaces, native HTTP MCP and manifest user configuration are required.
 agent = ">=2.1.83"
 
