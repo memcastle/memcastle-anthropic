@@ -64,9 +64,9 @@ the binary against `SHA256SUMS`; Core's shared validation tests source fixtures,
 pull requests and pushes to `main`. Core 0.4.1 predates plugin installation and is not a compatible matrix entry.
 
 gh-ship and git-cliff open a reviewed `release/next` PR for releasable commits. Merging it publishes the
-validated `anthropic/vVERSION` archive. Configure the `release` environment with `APP_CLIENT_ID` and
-`APP_PRIVATE_KEY` for an installed GitHub App. The plugin catalogue discovers published releases by repository
-and checks their release-asset digest.
+validated `anthropic-VERSION.tar.gz` archive under the `VERSION` tag. Configure the `release` environment with
+`APP_CLIENT_ID` and `APP_PRIVATE_KEY` for an installed GitHub App. The plugin catalogue discovers published releases
+by repository and checks their release-asset digest.
 The publish workflow uses this credential to check the draft release and upload its validated archive.
 
 Codecov uses fixed 80% project and patch floors and an 81% `source-claude` component floor.
