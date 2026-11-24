@@ -1,5 +1,15 @@
 # Claude Code history source
 
+## Build baseline
+
+Requires Rust 1.100+, `wasm32-wasip3` / WASI 0.3, wit-bindgen 0.63, and source contract 0.5.0.
+Use upstream development Core containing `828f0f6`; stable 0.5.2 predates this ABI.
+Generate and commit `Cargo.lock`, then run `cargo build --locked --release --target wasm32-wasip3`.
+The stackful `sync: true` bindings preserve synchronous Rust I/O behind async acquisition exports.
+From the plugin root, `mise run source:claude:build` stages the component for packaging.
+Run `python3 scripts/validate_component.py source sources/claude/source.wasm` with wasm-tools 1.263.0,
+then `memcastle source test sources/claude` for the actual transcript fixture.
+
 This WebAssembly source reads Claude Code's documented JSONL session transcripts from
 `~/.claude/projects/<project>/<session>.jsonl`.
 It is separate from any live Claude Code integration: it reads finished or active local transcript files directly and never

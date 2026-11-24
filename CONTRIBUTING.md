@@ -24,8 +24,12 @@ The source and integration trees are independent, even when an ID is shared.
 
 ## Check a change
 
+Discover typed module tasks with `mise tasks ls`; see [root tasks](README.md#modules-and-root-tasks).
+Use upstream development Core containing `828f0f6` or a verified descendant until a compatible stable release exists.
+Validate built components with wasm-tools 1.263.0 through `scripts/validate_component.py` before host conformance.
+
 Install a plugin-capable MemCastle Core binary.
-For source and embedding modules, install Rust with the `wasm32-wasip2` target.
+For source modules, install Rust 1.100+ with the `wasm32-wasip3` target and Python 3.11+.
 For integrations, install Bun.
 
 Run the affected module's tests and build, then from the project root:
