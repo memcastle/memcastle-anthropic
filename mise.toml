@@ -1,2 +1,51 @@
+# Root task configuration and optional release tooling.
+
 [tools]
 git-cliff = "2.12.0"
+
+[tasks."source:claude:format:check"]
+description = "Check formatting for source claude"
+dir = "sources/claude"
+run = "cargo fmt --all -- --check"
+
+[tasks."source:claude:lint"]
+description = "Lint source claude"
+dir = "sources/claude"
+run = "cargo clippy --locked --target wasm32-wasip3 -- -D warnings"
+
+[tasks."source:claude:test"]
+description = "Run native tests for source claude"
+dir = "sources/claude"
+run = "cargo test --locked --lib"
+
+[tasks."source:claude:build"]
+description = "Build the package-ready component for source claude"
+dir = "sources/claude"
+run = '''
+set -eu
+cargo build --locked --release --target wasm32-wasip3
+metadata="$(cargo metadata --locked --no-deps --format-version 1)"
+crate="$(printf '%s' "$metadata" | jq -er '.packages[] | select(.manifest_path == (env.PWD + "/Cargo.toml")) | .targets[] | select(.kind | index("cdylib")) | .name')"
+target="$(printf '%s' "$metadata" | jq -er '.target_directory')"
+cp "$target/wasm32-wasip3/release/$crate.wasm" source.wasm
+'''
+
+[tasks."integration:claude-code:format:check"]
+description = "Run format:check for integration claude-code"
+dir = "integrations/claude-code"
+run = "bun run format:check"
+
+[tasks."integration:claude-code:lint"]
+description = "Run lint for integration claude-code"
+dir = "integrations/claude-code"
+run = "bun run lint"
+
+[tasks."integration:claude-code:test"]
+description = "Run test for integration claude-code"
+dir = "integrations/claude-code"
+run = "bun test --timeout 60000"
+
+[tasks."integration:claude-code:build"]
+description = "Run build for integration claude-code"
+dir = "integrations/claude-code"
+run = "bun run build"

@@ -1,5 +1,17 @@
 # MemCastle Anthropic plugin
 
+## Modules and root tasks
+
+- Source: [claude](sources/claude/).
+- Integration: [claude-code](integrations/claude-code/).
+
+Use `mise tasks ls` for each module's typed `build`, `test`, `lint`, and `format:check` tasks.
+For example, `mise run source:claude:build` stages the component for packaging.
+Install integration dependencies first; native tests do not replace host conformance or archive checks.
+Requires Rust 1.100+, `wasm32-wasip3`, wasm-tools 1.263.0, and upstream development Core containing `828f0f6`.
+Stable 0.5.2 predates WASI 0.3 despite sharing the development version string; the compatibility range is transitional.
+Validate with `python3 scripts/validate_component.py source sources/claude/source.wasm`.
+
 [![CI][ci-badge]][ci-workflow] [![Codecov][codecov-badge]][codecov-project]
 
 [ci-badge]: https://github.com/memcastle/memcastle-anthropic/actions/workflows/ci.yaml/badge.svg?branch=main
@@ -40,7 +52,7 @@ after installing the plugin; the local marketplace `memcastle-local` and plugin 
 
 ## Build and test locally
 
-Install Rust with `wasm32-wasip2`, Bun and a plugin-capable MemCastle Core binary. Build the source component
+Install Rust 1.100+ with `wasm32-wasip3`, Bun and upstream development MemCastle Core. Build the source component
 to `sources/claude/source.wasm` and the integration into `integrations/claude-code/dist/` before packaging.
 Commit the source `Cargo.lock` before releasing; see the CI workflow for the reproducible build commands.
 
@@ -59,7 +71,11 @@ cursors and documents. Neither module needs a sibling Core checkout to build or 
 
 ## CI and releases
 
-CI builds both modules and tests the packaged artifact against Core `development` and `0.5`. The Core setup action verifies
+Source coverage jobs set `WIT_BINDGEN_DEBUG=1` to emit generated ABI glue under the build directory,
+where cargo-llvm-cov's existing filtering excludes it instead of attributing it to provider code.
+Provider coverage gates and release component builds remain unchanged.
+
+CI builds both modules and tests the packaged artifact against upstream Core `development` only. The Core setup action verifies
 the binary against `SHA256SUMS`; Core's shared validation tests source fixtures, installation and activation on
 pull requests and pushes to `main`. Core 0.4.1 predates plugin installation and is not a compatible matrix entry.
 
