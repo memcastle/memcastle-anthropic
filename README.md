@@ -71,6 +71,10 @@ cursors and documents. Neither module needs a sibling Core checkout to build or 
 
 ## CI and releases
 
+Source coverage jobs set `WIT_BINDGEN_DEBUG=1` to emit generated ABI glue under the build directory,
+where cargo-llvm-cov's existing filtering excludes it instead of attributing it to provider code.
+Provider coverage gates and release component builds remain unchanged.
+
 CI builds both modules and tests the packaged artifact against upstream Core `development` only. The Core setup action verifies
 the binary against `SHA256SUMS`; Core's shared validation tests source fixtures, installation and activation on
 pull requests and pushes to `main`. Core 0.4.1 predates plugin installation and is not a compatible matrix entry.
